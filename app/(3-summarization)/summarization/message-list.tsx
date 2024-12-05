@@ -7,9 +7,18 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
+interface Message {
+  id: number;
+  author: {
+    name: string;
+    initials: string;
+    avatarSrc: string;
+  };
+  timestamp: string;
+  content: string;
+}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function MessageList({ messages: comments }: { messages: any[] }) {
+export function MessageList({ messages: comments }: { messages: Message[] }) {
   const currentUser = {
     initials: "YO",
     avatarSrc: "/placeholder-user.jpg",
@@ -70,8 +79,7 @@ export function MessageList({ messages: comments }: { messages: any[] }) {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function ReplyIcon(props: any) {
+function ReplyIcon(props: { className: string }) {
   return (
     <svg
       {...props}
@@ -91,8 +99,7 @@ function ReplyIcon(props: any) {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function ThumbsDownIcon(props: any) {
+function ThumbsDownIcon(props: { className: string }) {
   return (
     <svg
       {...props}
@@ -112,8 +119,7 @@ function ThumbsDownIcon(props: any) {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function ThumbsUpIcon(props: any) {
+function ThumbsUpIcon(props: { className: string }) {
   return (
     <svg
       {...props}
