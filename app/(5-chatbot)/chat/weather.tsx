@@ -1,5 +1,6 @@
+import { chatStore } from "@/lib/message-store";
 import { useChat } from "@ai-sdk/react";
-import { defaultChatStoreOptions } from "ai";
+import { generateId } from "ai";
 import {
   Cloud,
   Sun,
@@ -26,12 +27,11 @@ const defaultWeatherData: WeatherData = {
 
 export default function Weather({
   weatherData = defaultWeatherData,
-  append,
 }: {
   weatherData?: WeatherData;
-  append: (message: string) => void;
 }) {
-  console.log(weatherData);
+  const { append } = useChat({ chatStore, chatId: "weather" });
+
   const [clicked, setClicked] = useState(false);
   const getWeatherIcon = (code: number) => {
     switch (true) {
@@ -89,7 +89,11 @@ export default function Weather({
         disabled={clicked}
         onClick={async () => {
           setClicked(true);
-          append("Get weather in a random place");
+          append({
+            parts: [{ text: "Get weather in a random place", type: "text" }],
+            role: "user",
+            id: generateId(),
+          });
         }}
       >
         {clicked ? "Clicked" : "Click me"}

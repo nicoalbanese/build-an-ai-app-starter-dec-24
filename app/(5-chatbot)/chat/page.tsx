@@ -2,15 +2,12 @@
 
 import { useChat } from "@ai-sdk/react";
 import Weather from "./weather";
-import { defaultChatStoreOptions } from "ai";
+import { chatStore } from "@/lib/message-store";
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, append } = useChat({
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
     chatId: "weather",
-    chatStore: defaultChatStoreOptions({
-      api: "/api/chat",
-      chats: { weather: { messages: [] } },
-    }),
+    chatStore,
   });
 
   return (
@@ -27,12 +24,6 @@ export default function Chat() {
                 ) {
                   return (
                     <Weather
-                      append={(message: string) =>
-                        append({
-                          role: "user",
-                          parts: [{ type: "text", text: message }],
-                        })
-                      }
                       key={p.toolInvocation.toolCallId}
                       weatherData={p.toolInvocation.result}
                     />
