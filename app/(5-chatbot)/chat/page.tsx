@@ -2,12 +2,17 @@
 
 import { useChat } from "@ai-sdk/react";
 import Weather from "./weather";
+import { defaultChatStoreOptions } from "ai";
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
-    id: "weather",
-    maxSteps: 5,
+  const { messages, input, handleInputChange, handleSubmit, append } = useChat({
+    chatId: "weather",
+    chatStore: defaultChatStoreOptions({
+      api: "/api/chat",
+      chats: { weather: { messages: [] } },
+    }),
   });
+
   return (
     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
       {messages.map((m) => (
@@ -22,13 +27,19 @@ export default function Chat() {
                 ) {
                   return (
                     <Weather
+                      append={(message: string) =>
+                        append({
+                          role: "user",
+                          parts: [{ type: "text", text: message }],
+                        })
+                      }
                       key={p.toolInvocation.toolCallId}
                       weatherData={p.toolInvocation.result}
                     />
                   );
-                }
+                } else return null;
               case "text":
-                return <p key={m.id + "-" + p.type + "-" + i}>{m.content}</p>;
+                return <p key={m.id + "-" + p.type + "-" + i}>{p.text}</p>;
               default:
                 null;
             }

@@ -1,5 +1,5 @@
 import { openai } from "@ai-sdk/openai";
-import { streamText, tool } from "ai";
+import { convertToModelMessages, streamText, tool } from "ai";
 import { z } from "zod";
 
 export const maxDuration = 30;
@@ -7,9 +7,11 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
+  console.log("Received message:", messages.at(-1));
+
   const result = streamText({
     model: openai("gpt-4o"),
-    messages,
+    messages: convertToModelMessages(messages),
     tools: {
       getWeather: tool({
         description: "Get the current weather at a location",
@@ -35,5 +37,5 @@ export async function POST(req: Request) {
     },
   });
 
-  return result.toDataStreamResponse();
+  return result.toUIMessageStreamResponse();
 }
