@@ -1,3 +1,4 @@
+import { useChat } from "@ai-sdk/react";
 import {
   Cloud,
   Sun,
@@ -6,6 +7,7 @@ import {
   CloudFog,
   CloudLightning,
 } from "lucide-react";
+import { useState } from "react";
 
 export interface WeatherData {
   city: string;
@@ -27,6 +29,8 @@ export default function Weather({
   weatherData?: WeatherData;
 }) {
   console.log(weatherData);
+  const { append } = useChat({ id: "weather" });
+  const [clicked, setClicked] = useState(false);
   const getWeatherIcon = (code: number) => {
     switch (true) {
       case code === 0:
@@ -79,6 +83,15 @@ export default function Weather({
 
   return (
     <div className="text-white p-8 rounded-3xl backdrop-blur-lg bg-gradient-to-b from-blue-400 to-blue-600 shadow-lg">
+      <button
+        disabled={clicked}
+        onClick={async () => {
+          setClicked(true);
+          append({ role: "user", content: "Get weather in a random place" });
+        }}
+      >
+        {clicked ? "Clicked" : "Click me"}
+      </button>
       <h2 className="text-4xl font-semibold mb-2">{weatherData.city}</h2>
       <div className="flex items-center justify-between">
         <div>
